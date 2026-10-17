@@ -267,7 +267,7 @@ export default function HospitalDiscoveryPage({
         specialty: selectedSpecialty || undefined,
         procedure: selectedProcedure || undefined,
         roomType: selectedRoom,
-        networkOnly: Boolean(policy?.insurer) || networkOnly
+        networkOnly
       });
 
       setHospitals(res.hospitals || []);
@@ -309,8 +309,8 @@ export default function HospitalDiscoveryPage({
   const filteredHospitals = useMemo(() => {
     let list = [...hospitals];
 
-    // If an insurer policy is active, strictly filter to hospitals that accept this insurer in all sorting features
-    if (policy?.insurer || networkOnly) {
+    // Network-only is ON by default when the policy has an insurer, but the user can switch it off
+    if (networkOnly) {
       list = list.filter((item) => item.networkInfo?.networkStatus === 'verified');
     }
 
@@ -841,16 +841,15 @@ export default function HospitalDiscoveryPage({
                 gap: '6px',
                 borderRadius: 'var(--radius-pill)',
                 border: networkOnly ? '1px solid var(--color-primary)' : '1px solid var(--color-border)',
-                cursor: policy?.insurer ? 'default' : 'pointer'
+                cursor: 'pointer'
               }}
-              onClick={() => {
-                if (!policy?.insurer) {
-                  setNetworkOnly(!networkOnly);
-                }
-              }}
+              onClick={() => setNetworkOnly(!networkOnly)}
+              aria-pressed={networkOnly}
               title={
                 policy?.insurer
-                  ? `Showing exclusively verified ${policy.insurer} network hospitals`
+                  ? (networkOnly
+                    ? `Showing only verified ${policy.insurer} network hospitals. Click to show all hospitals.`
+                    : `Showing all hospitals. Click to show only verified ${policy.insurer} network hospitals.`)
                   : (networkOnly ? t('discovery.networkMatchToggleTitleOn') : t('discovery.networkMatchToggleTitleOff'))
               }
             >

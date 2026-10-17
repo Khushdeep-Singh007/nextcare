@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { FileText, Building2, Calculator, ShieldCheck, ClipboardCheck } from 'lucide-react';
+import { FileText, Building2, Calculator, ShieldCheck, ClipboardCheck, HandCoins } from 'lucide-react';
 
 /**
  * Hero 3D scene for the NEXTCARE landing page.
@@ -81,10 +81,12 @@ function SplineViewer({ url, onFail }) {
 }
 
 const NODES = [
-  { id: 'policy', Icon: FileText, label: 'Policy', text: 'Your policy PDF becomes clear rules: limits, co-pay, exclusions.', x: 14, y: 22 },
-  { id: 'hospital', Icon: Building2, label: 'Hospitals', text: 'Hospitals ranked by how well they fit your cover.', x: 80, y: 18 },
-  { id: 'cost', Icon: Calculator, label: 'Your cost', text: 'An estimated bill and what you may pay yourself.', x: 84, y: 74 },
-  { id: 'journey', Icon: ClipboardCheck, label: 'Care journey', text: 'Guidance from admission to claim settlement.', x: 12, y: 78 }
+  { id: 'policy', Icon: FileText, label: 'Policy', text: 'Your policy PDF becomes clear rules: limits, co-pay, exclusions, each with its source clause.', x: 16, y: 18 },
+  { id: 'hospital', Icon: Building2, label: 'Hospitals', text: 'Hospitals ranked by how well they fit your cover, with insurer-network evidence.', x: 82, y: 16 },
+  { id: 'cost', Icon: Calculator, label: 'Your cost', text: 'An itemised bill estimate and what you may pay yourself, with the maths shown.', x: 90, y: 54 },
+  { id: 'journey', Icon: ClipboardCheck, label: 'Claim prep', text: 'Care-journey alerts and a checklist from pre-auth to discharge.', x: 74, y: 88 },
+  { id: 'support', Icon: HandCoins, label: 'Govt support', text: 'PM-JAY and ESI cover understood alongside private insurance.', x: 22, y: 86 },
+  { id: 'shield', Icon: ShieldCheck, label: 'Protection', text: 'One view of your financial protection before you choose a hospital.', x: 8, y: 52 }
 ];
 
 function FallbackScene() {
@@ -140,7 +142,9 @@ function FallbackScene() {
           <div className="nc-orb-ring nc-orb-ring-1" />
           <div className="nc-orb-ring nc-orb-ring-2" />
           <div className="nc-shield">
-            <ShieldCheck size={56} strokeWidth={1.4} />
+            <div className="nc-doc" aria-hidden="true">
+              <span /><span /><span /><span />
+            </div>
           </div>
         </div>
 
@@ -154,7 +158,7 @@ function FallbackScene() {
             onMouseLeave={() => setActive(null)}
             onFocus={() => setActive(n.id)}
             onBlur={() => setActive(null)}
-            onClick={() => setActive(active === n.id ? null : n.id)}
+            onClick={() => setActive(n.id)}
             aria-label={`${n.label}: ${n.text}`}
           >
             <n.Icon size={20} strokeWidth={1.7} />
@@ -164,7 +168,7 @@ function FallbackScene() {
       </div>
 
       <div className="nc-scene-caption" aria-live="polite">
-        {activeNode ? activeNode.text : 'One policy, connected to hospitals, costs and your care journey.'}
+        {activeNode ? activeNode.text : 'Hover or tap an element to see how NEXTCARE connects it to your policy.'}
       </div>
     </div>
   );
